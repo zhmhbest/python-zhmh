@@ -1,5 +1,5 @@
 import setuptools
-from zhmh import __VERSION
+from pyzhmh import __VERSION
 
 with open("README.md", "r") as fp:
     long_description = fp.read()
