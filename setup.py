@@ -7,11 +7,11 @@ setuptools.setup(
     # 环境依赖（版本、包、文件<包:匹配>）
     # python_requires='>=3',
     # install_requires=[''],
-    package_data={'': ['*.txt']},
+    # package_data={'': ['*.txt']},
 
     # 打包配置
     # scripts=['.py'],
-    packages=setuptools.find_packages(exclude=['build.py', 'test.py']),
+    packages=setuptools.find_packages(),  # exclude=['package']
 
     # 作者资料
     author="zhmh",
