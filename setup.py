@@ -9,6 +9,7 @@ setuptools.setup(
     # python_requires='>=3',
     # install_requires=[''],
     # package_data={'': ['*.txt']},
+    # 'MANIFEST.in': 打包时包含/排除指定规则的文件
 
     # 打包配置
     # scripts=['.py'],
