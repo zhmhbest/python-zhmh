@@ -1,6 +1,6 @@
 # python-zhmh
 
-## 进度条
+## ProgressBar
 
 ```python
 import time
