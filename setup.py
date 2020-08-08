@@ -1,4 +1,5 @@
 import setuptools
+from zhmh import __VERSION
 
 with open("README.md", "r") as fp:
     long_description = fp.read()
@@ -19,7 +20,7 @@ setuptools.setup(
 
     # 模块信息
     name="python-zhmh",
-    version="0.0.1",
+    version=__VERSION,
     description="Python Common Command",
     # keywords="hello common",
     license="MIT",  # https://choosealicense.com/
