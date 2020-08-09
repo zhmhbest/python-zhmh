@@ -36,7 +36,8 @@ class RichPrint:
         print(f'{RichPrint.__make_head(control, foreground, background)}{content}{RichPrint.__make_tail()}', end='')
 
     @staticmethod
-    def progress_bar(rate, length=50, single_char1='█', single_char2='·'):
+    def progress_bar(rate: float, length: int = 50, single_char1: str = '█', single_char2: str = '·'):
+        rate = rate if rate < 1 else 1
         num_part_l = int(rate * length)
         num_part_r = length - num_part_l
         str_l = single_char1 * num_part_l
@@ -46,7 +47,7 @@ class RichPrint:
         cs = RichPrint.__make_head(fg='s')
         cb = RichPrint.__make_head(fg='b', ct='BOLD')
         _c = RichPrint.__make_tail()
-        if rate >= 1:
+        if 1 == rate:
             print(f"\r{cb}|{str_l}|{_c} {cy}100.00%{_c} ")
         else:
             print(

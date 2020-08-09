@@ -1,6 +1,6 @@
 # python-zhmh
 
-## ½ø¶ÈÌõ
+## è¿›åº¦æ¡
 
 ```python
 import time
@@ -12,7 +12,7 @@ for i in range(1, 1 + length):
     time.sleep(0.05)
 ```
 
-## ÏÂÔØ
+## ä¸‹è½½
 
 ```python
 from pyzhmh import download_one_file
