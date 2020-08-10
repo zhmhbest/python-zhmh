@@ -42,11 +42,14 @@ def __fix_options(options: dict) -> bool:
         }
     elif 'User-Agent' not in options['headers']:
         options['headers']['User-Agent'] = __USER_AGENT
-    # 请求行 或 请求体
+    # GET使用请求行
     if 'data' in options and 'GET' == options['method']:
         options['params'] = options['data']
-        # options.pop('data')
         del options['data']
+    # POST使用请求体
+    if 'params' in options and 'POST' == options['method']:
+        options['data'] = options['params']
+        del options['params']
     return True
 
 
@@ -68,7 +71,7 @@ def download_one_file(
     :return:
     """
     if __check_hash(local, f'{local}.ok'):
-        return True  # 文件存在且校验通过
+        return True  # 文件存在且校验通过（已下载）
     if not __fix_options(request_options):
         return False  # 参数错误
 
@@ -81,17 +84,23 @@ def download_one_file(
     # 请求数据
     res = requests.request(**request_options, stream=True)
     headers = res.headers
-    remain_length = int(headers['Content-Length'])
 
+    # 是否成功
     if 200 == res.status_code:
+        # 首次
+        remain_length = int(headers['Content-Length'])
         content_length = remain_length
         current_length = 0
     elif 206 == res.status_code:
+        # 续传
+        remain_length = int(headers['Content-Length'])
         content_length = int(content[1])
         current_length = int(content[0])
         # print(remain_length, content_length - current_length)
     else:
-        print(res.status_code)
+        print(res.status_code, 'Download failed.')
+        # for item in headers:
+        #     print(item, headers[item])
         return False
 
     with open(local, 'ab+') as fp_data:
