@@ -7,7 +7,7 @@ with open('README.md', 'r', encoding='utf-8') as fp:
 setuptools.setup(
     # 环境依赖（版本、包、文件<包:匹配>）
     python_requires='>=3',
-    install_requires=['requests>=2.18.0', 'pandas>=0.24.2', 'numpy>=1.14.0'],
+    install_requires=['requests>=2.18.0'],
     # package_data={'': ['*.txt']},
     # 'MANIFEST.in': 打包时包含/排除指定规则的文件
 
