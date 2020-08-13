@@ -3,3 +3,4 @@ dist/
 venv/
 *.egg-info/
 **dump
+test.py

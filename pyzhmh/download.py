@@ -77,8 +77,11 @@ def download_one_file(
 
     # 检查断点
     if os.path.exists(f'{local}.lock'):
-        with open(f'{local}.lock', 'r') as f:
-            content = f.read().split('/')
+        with open(f'{local}.lock', 'rb') as fp:
+            content = [
+                int.from_bytes(bytes=fp.read(8), byteorder='little'),
+                int.from_bytes(bytes=fp.read(8), byteorder='little')
+            ]
         request_options['headers']['Range'] = f'bytes={content[0]}-'
 
     # 请求数据
@@ -91,33 +94,39 @@ def download_one_file(
         remain_length = int(headers['Content-Length'])
         content_length = remain_length
         current_length = 0
+        open_lock_mode = 'wb+'
     elif 206 == res.status_code:
         # 续传
         remain_length = int(headers['Content-Length'])
         content_length = int(content[1])
         current_length = int(content[0])
         # print(remain_length, content_length - current_length)
+        open_lock_mode = 'rb+'
     else:
         print(res.status_code, 'Download failed.')
         # for item in headers:
         #     print(item, headers[item])
         return False
-
     with open(local, 'ab+') as fp_data:
-        fp_lock = open(f'{local}.lock', 'w')
+        fp_lock = open(f'{local}.lock', open_lock_mode)
         fp_data.seek(current_length)
         for chunk_data in res.iter_content(chunk_size=chunk_size):
+            # 写入下载数据
             fp_data.write(chunk_data)
             fp_data.flush()
             current_length += chunk_size
+            # 写入下载记录
             fp_lock.seek(0)
-            fp_lock.write(f'{current_length}/{content_length}')
+            # current_length content_length
+            fp_lock.write(int(current_length).to_bytes(length=8, byteorder='little'))
+            fp_lock.write(int(content_length).to_bytes(length=8, byteorder='little'))
             fp_lock.flush()
+            # 进度条
             RichPrint.progress_bar(current_length / content_length)
         # 计算Hash
         fp_data.seek(0, 0)
         fp_lock.seek(0, 0)
-        fp_lock.write(__hash_hexdigest(fp_data.read()))
+        fp_lock.write(__hash_hexdigest(fp_data.read()).encode('utf-8'))
         fp_lock.close()
     res.close()
     os.rename(f'{local}.lock', f'{local}.ok')
